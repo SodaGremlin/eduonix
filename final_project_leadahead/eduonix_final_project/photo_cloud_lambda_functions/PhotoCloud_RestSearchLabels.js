@@ -6,20 +6,27 @@ aws.config.update({
 
 const dynamoDB = new aws.DynamoDB.DocumentClient();
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
+    console.log("Search requested", JSON.stringify(event));
+
     return dynamoDB.scan({
         TableName: "PhotoCloudPhoto",
-        FilterExpression: "attribute_exists(detectFacesResponse)",
-        // ExpressionAttributeValues: {
-        //     // ":attr": "detectFacesResponse"
-        // }
+        FilterExpression: `contains(labels, :keyword)`,
+        ExpressionAttributeValues: {
+            ":keyword": `${event.keyword}`
+        }
     }).promise()
     .then(data => {
         console.log("successfully scan results - " + JSON.stringify(data));
+
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify(data),
+        };
+
+        return response;
     })
     .catch(err => {
         console.error("Could not scan the table", err);
     });
 };
-
-exports.handler();

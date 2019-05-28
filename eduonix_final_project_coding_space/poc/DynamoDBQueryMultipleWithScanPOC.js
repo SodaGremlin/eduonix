@@ -8,18 +8,16 @@ const dynamoDB = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
     return dynamoDB.scan({
-        TableName: "PhotoCloudPhoto",
-        FilterExpression: "attribute_exists(detectFacesResponse)",
-        // ExpressionAttributeValues: {
-        //     // ":attr": "detectFacesResponse"
-        // }
+        TableName: "Test",
+        FilterExpression: "facesDetected = :facesDetected",
+        ExpressionAttributeValues: {
+            ":facesDetected": true
+        }
     }).promise()
     .then(data => {
         console.log("successfully scan results - " + JSON.stringify(data));
     })
     .catch(err => {
-        console.error("Could not scan the table", err);
+        console.error("Could not scan the table test", err);
     });
 };
-
-exports.handler();
