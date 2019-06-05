@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HelloEndpoint Front End</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        jQuery(document).ready(function() {
+            jQuery("#getRandomNumberButton").click(function() {
+                jQuery.ajax(
+                    "https://daqv3d1bqg.execute-api.us-west-1.amazonaws.com/default/HelloEndpoint"
+                ).done(function(data) {
+                    response = JSON.parse(data.body);
+                    jQuery("#randomNumber").html("Your random number is: " + response.randomInt + '<br/>' +
+                        "Your random float is: " + response.randomFloat + '<br/>');
+                });
+            })
+        });
+    </script>
+
+    <style>
+        html {
+            background-color: azure;
+        }
+        #randomNumber, #getRandomNumberButton {
+            height: 50px;
+            width: 400px;
+        }
+
+        #getRandomNumberButton {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="randomNumber">
+
+</div>
+<div>
+    <button id="getRandomNumberButton">Get Random Number</button>
+</div>
+</body>
+</html>

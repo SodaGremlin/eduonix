@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HelloEndpoint Front End</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        jQuery(document).ready(function() {
+            jQuery("#searchButton").click(function() {
+                const keyword = jQuery('#keyword').val();
+                console.log(`requesting the results for keyword - ${keyword}`);
+
+                jQuery('#searchResults').html('');
+
+                jQuery.ajax(
+                    `https://photocloud-website-api.greggharrington.com/v1/search?keyword=${keyword}`
+                ).done(function(data) {
+                    response = JSON.parse(data.body);
+
+                    console.log(`got the keyword response - ${JSON.stringify(response)}`);
+
+                    response.Items.forEach(currentPhotoResult => {
+                        jQuery('#searchResults').append(
+                            `<div id="photo_${currentPhotoResult.uuid}" class="photoResult">
+                                <img src="https://photocloud-website.greggharrington.com/${currentPhotoResult.imagePath}"
+                                        alt="Photo Search Result" />
+                            </div>`
+                        )
+                    });
+                });
+            })
+        });
+    </script>
+
+    <style>
+        .photoResult {
+            min-height: 300px;
+            min-width: 300px;
+            float: left;
+            margin: 5px;
+        }
+
+        .photoResult img {
+            max-height: 300px;
+            max-width: 300px;
+        }
+
+        img {
+            image-orientation: from-image;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <input type="text" id="keyword" value="" />&nbsp;&nbsp;
+    <button id="searchButton">Search</button>
+</div>
+
+<div id="searchResults">
+
+</div>
+</body>
+</html>
